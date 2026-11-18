@@ -1,0 +1,10 @@
+# Our theme (colours from the Ghithaaey logo). No secrets here: safe to commit.
+[theme]
+base = "dark"
+primaryColor = "#5AB0FA"
+backgroundColor = "#04112B"
+secondaryBackgroundColor = "#0A1E44"
+textColor = "#F2F7FF"
+
+[client]
+toolbarMode = "minimal"
