@@ -56,7 +56,7 @@ TESTS = [
      "must_include": [], "must_not_include": [], "expect_tool": None},
     # Tools (Lab 5, Lab 16)
     {"name": "Tool: calories", "question": "انا طولي 175 و وزني 90 وعمري 25، ذكر، نشاطي خفيف، و ابي انحف. احسب احتياجي من السعرات",
-     "must_include": ["2077"], "must_not_include": [], "expect_tool": "calculate_calories"},
+     "must_include": ["2077"], "must_not_include": [], "expect_tool": "nutrition_plan"},
     {"name": "Tool: calculator", "question": "What is 15% of 2,480?",
      "must_include": ["372"], "must_not_include": [], "expect_tool": "calculator"},
     {"name": "Tool: food (n8n)", "question": "كم سعرة في 100 غرام تفاح؟",
@@ -64,8 +64,8 @@ TESTS = [
 ]
 
 # Memory (Lab 14 demo): give a fact, ask about it later in the SAME chat.
-MEMORY_TURNS = ["اسمي علي ووزني 70 كيلو", "وش أفطر؟", "وش اسمي وكم وزني؟"]
-MEMORY_MUST_INCLUDE = ["علي", "70"]
+MEMORY_TURNS = ["عمري 25 وطولي 175 ووزني 90 وأنا ذكر", "وش أفطر؟", "أبي أنحف، كم سعرة وكم بروتين أحتاج؟"]
+MEMORY_MUST_INCLUDE = ["2077"]  # the plan used the age, height and weight from the first message
 
 
 def run_tests(agent) -> pd.DataFrame:

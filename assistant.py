@@ -2,7 +2,7 @@
 
 - Lab 5/6:  connect Gemini (Google AI), any OpenAI-compatible URL, or a local Ollama model.
 - Lab 13:   create_agent with our tools.
-- Lab 14:   InMemorySaver + thread_id, keeping the last MAX_MESSAGES = 10 messages.
+- Lab 14:   InMemorySaver + thread_id, keeping the last 10 questions; the body profile is saved per thread.
 - Day 7 guardrails: a step limit and a log of every tool call.
 - Day 9: everything goes through one function, ask().
 
@@ -12,14 +12,14 @@ import uuid
 
 from langchain.agents import create_agent
 from langchain.agents.middleware import before_model
-from langchain_core.messages import RemoveMessage, trim_messages
+from langchain_core.messages import RemoveMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.errors import GraphRecursionError
 from langgraph.graph.message import REMOVE_ALL_MESSAGES
 
 from rag import build_knowledge_tool
 from settings import CONFIG, get_secret
-from tools import build_web_search, calculate_calories, calculator, check_food
+from tools import build_web_search, calculator, check_food, nutrition_plan, save_profile
 
 
 def build_llm():
@@ -39,7 +39,7 @@ def build_llm():
 
 
 def build_tools() -> list:
-    tools = [build_knowledge_tool(), calculator, calculate_calories]
+    tools = [build_knowledge_tool(), calculator, nutrition_plan, save_profile]
     if get_secret("N8N_URL"):
         tools.append(check_food)
     web_search = build_web_search()
@@ -49,14 +49,16 @@ def build_tools() -> list:
 
 
 @before_model
-def keep_last_messages(state, runtime):
-    """Lab 14: keep only the last MAX_MESSAGES messages (cost and speed)."""
+def keep_last_turns(state, runtime):
+    """Lab 14: memory has a cost, so keep only the last MAX_TURNS questions and their answers.
+    Tool steps don't count as turns. The user's body profile is kept separately (tools.PROFILES),
+    so it is never lost when old messages are removed."""
     messages = state["messages"]
-    if len(messages) <= CONFIG["max_messages"]:
+    human_positions = [i for i, m in enumerate(messages) if m.type == "human"]
+    if len(human_positions) <= CONFIG["max_turns"]:
         return None
-    kept = trim_messages(messages, max_tokens=CONFIG["max_messages"], token_counter=len,
-                         strategy="last", start_on="human", include_system=False)
-    return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *kept]}
+    start = human_positions[-CONFIG["max_turns"]]
+    return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *messages[start:]]}
 
 
 def build_agent():
@@ -64,7 +66,7 @@ def build_agent():
         model=build_llm(),
         tools=build_tools(),
         system_prompt=CONFIG["system_prompt"],
-        middleware=[keep_last_messages],
+        middleware=[keep_last_turns],
         checkpointer=InMemorySaver(),
     )
 

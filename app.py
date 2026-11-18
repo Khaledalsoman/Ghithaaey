@@ -6,6 +6,7 @@ Keys: .streamlit/secrets.toml (see secrets.toml.example)
 import streamlit as st
 
 from assistant import ask, build_agent, new_thread_id
+from tools import PROFILES
 from settings import CONFIG
 
 st.set_page_config(page_title=CONFIG["assistant_name"], page_icon="🥗")
@@ -79,7 +80,8 @@ section[data-testid="stSidebar"] * {
 TOOL_LABELS = {
     "search_knowledge_base": "📚 قاعدة المعرفة",
     "calculator": "🧮 الآلة الحاسبة",
-    "calculate_calories": "🔥 حساب السعرات",
+    "nutrition_plan": "🔥 حاسبة التغذية",
+    "save_profile": "💾 حفظ بياناتك",
     "check_food": "🍎 القيم الغذائية (n8n)",
     "tavily_search": "🌐 بحث الويب",
 }
@@ -109,9 +111,18 @@ with st.sidebar:
     st.header("عن المساعد")
     st.write(CONFIG["disclaimer"])
     if st.button("محادثة جديدة", use_container_width=True):
+        PROFILES.pop(st.session_state.thread_id, None)  # forget this chat's profile (privacy, Lab 4)
         st.session_state.thread_id = new_thread_id()
         st.session_state.messages = []
         st.rerun()
+    # Lab 14: what the assistant remembers in this chat
+    profile = PROFILES.get(st.session_state.thread_id)
+    if profile:
+        st.subheader("بياناتك في هذه المحادثة")
+        names = {"age": "العمر", "sex": "الجنس", "weight_kg": "الوزن (كجم)", "height_cm": "الطول (سم)",
+                 "activity": "النشاط", "goal": "الهدف", "target_weight_kg": "الوزن المستهدف"}
+        for key, value in profile.items():
+            st.write(f"{names.get(key, key)}: {value}")
     st.subheader("جرّب تسأل")  # Lab 7: example questions
     for example in CONFIG["examples"]:
         if st.button(example, use_container_width=True):
@@ -138,3 +149,5 @@ if question:
         st.write(answer)
         show_tools(tool_log)
     st.session_state.messages.append({"role": "assistant", "content": answer, "tools": tool_log})
+    if any(step["tool"] in ("save_profile", "nutrition_plan") for step in tool_log):
+        st.rerun()  # show the updated profile in the sidebar
