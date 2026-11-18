@@ -81,3 +81,15 @@ python tests/evaluate.py baseline   # Day 9 tests, saved to results/
 ## Disclaimer
 
 General nutrition information only, not medical advice.
+
+## The app (user journey)
+
+| Step | Where | Why it beats a general chatbot |
+|---|---|---|
+| 1. Fill your profile once (age, sex, height, weight, activity, goal, target, health condition) | Sidebar | No retyping; every answer is personal |
+| 2. See your plan instantly: calories, macros, BMI, healthy weight, water, fiber, WHO limits, weeks to target | 📊 خطتي | Calculated in Python (`compute_plan`), exact and fast |
+| 3. Look up a food, pick grams, add it to today's log | 🍎 قيمة الأكل | n8n + USDA data; progress bars show what is left today |
+| 4. Ask anything | 💬 اسأل غذائي | The agent already knows your profile and today's log (`with_user_context` middleware); RAG answers cite MOH/WHO/SFDA |
+| 5. Check the sources | 📚 المصادر | Trust |
+
+Guardrails in the UI: health condition / pregnancy or under 18 → no calorie targets, refer to a doctor. "New chat" deletes the profile and log (privacy).

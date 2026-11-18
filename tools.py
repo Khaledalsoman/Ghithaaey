@@ -43,6 +43,7 @@ def calculator(a: float, b: float, operation: str) -> str:
 # The user's profile for each chat (key = thread_id, Lab 14). It lives only in memory while the
 # app runs, like InMemorySaver, and it survives message trimming, so the agent does not ask again.
 PROFILES: dict[str, dict] = {}
+FOOD_LOGS: dict[str, list] = {}   # today's food log per chat (filled from the app)
 PROFILE_FIELDS = ("age", "sex", "weight_kg", "height_cm", "activity", "goal", "target_weight_kg")
 
 ACTIVITY_FACTORS = {"sedentary": 1.2, "light": 1.375, "moderate": 1.55, "active": 1.725, "very_active": 1.9}
@@ -81,48 +82,75 @@ def thread_of(config: RunnableConfig) -> str:
     return (config or {}).get("configurable", {}).get("thread_id", "default")
 
 
-def build_plan(p: dict) -> str:
-    """All the numbers for one person. p has every field in PROFILE_FIELDS except target_weight_kg."""
-    w, h, age, sex, activity, goal = p["weight_kg"], p["height_cm"], p["age"], p["sex"], p["activity"], p["goal"]
+def compute_plan(p: dict) -> dict:
+    """All the numbers for one adult. The app shows them directly; the AI gets them as text."""
+    w, h, age, sex = p["weight_kg"], p["height_cm"], p["age"], p["sex"]
+    activity, goal = p.get("activity", "light"), p["goal"]
     b = bmi(w, h)
     base = bmr(w, h, age, sex)
     tdee = round(base * ACTIVITY_FACTORS[activity])
     target = tdee + GOAL_ADJUSTMENT[goal]
-    floor_note = ""
-    if target < MIN_CALORIES[sex]:
-        target, floor_note = MIN_CALORIES[sex], " (raised to the safe minimum)"
-
+    raised = target < MIN_CALORIES[sex]
+    target = max(target, MIN_CALORIES[sex])
     # Protein from body weight; for BMI over 25 use the weight at BMI 25, so protein is not overstated.
     ref_weight = min(w, 25 * (h / 100) ** 2)
     protein = round(PROTEIN_G_PER_KG[goal] * ref_weight)
     fat = round(target * FAT_SHARE / 9)
     carbs = max(round((target - protein * 4 - fat * 9) / 4), 0)
-    pct = lambda grams, kcal_per_g: round(grams * kcal_per_g * 100 / target)
-
-    low, high = round(18.5 * (h / 100) ** 2, 1), round(24.9 * (h / 100) ** 2, 1)
-    water = max(2.0, round(w * 0.033, 1))
-
-    lines = [
-        f"BMI: {b} ({bmi_category(b)}). Healthy weight for this height: {low}-{high} kg",
-        f"BMR: {base} kcal/day (Mifflin-St Jeor)",
-        f"Maintenance (TDEE, activity '{activity}'): {tdee} kcal/day",
-        f"Daily target for goal '{goal}': {target} kcal/day{floor_note}",
-        f"Macros per day: protein {protein} g ({pct(protein, 4)}%), carbs {carbs} g ({pct(carbs, 4)}%), "
-        f"fat {fat} g ({pct(fat, 9)}%)",
-        f"Per meal: " + ", ".join(f"{m} {round(target * s)} kcal" for m, s in MEALS.items()),
-        f"Fiber: about {FIBER_G[sex]} g/day (MOH). Water: at least {water} L/day, more with exercise and heat (MOH: at least 2 L)",
-        f"Limits (WHO): free sugars under {round(target * 0.10 / 4)} g/day (ideally under {round(target * 0.05 / 4)} g), "
-        f"saturated fat under {round(target * 0.10 / 9)} g/day, salt under 5 g/day (1 teaspoon)",
-    ]
+    plan = {
+        "bmi": b, "bmi_category": bmi_category(b),
+        "healthy_min": round(18.5 * (h / 100) ** 2, 1), "healthy_max": round(24.9 * (h / 100) ** 2, 1),
+        "bmr": base, "tdee": tdee, "target": target, "raised_to_minimum": raised,
+        "protein": protein, "carbs": carbs, "fat": fat,
+        "meals": {m: round(target * s) for m, s in MEALS.items()},
+        "fiber": FIBER_G[sex], "water": max(2.0, round(w * 0.033, 1)),
+        "sugar_max": round(target * 0.10 / 4), "sugar_ideal": round(target * 0.05 / 4),
+        "sat_fat_max": round(target * 0.10 / 9), "salt_max": 5,
+        "activity": activity, "goal": goal, "weeks": None, "target_weight": None, "target_too_low": False,
+    }
     target_w = p.get("target_weight_kg")
     if target_w and goal != "maintain" and abs(target_w - w) >= 0.5:
         per_week = 0.5 if goal == "lose" else 0.3   # MOH: lose 0.5-1 kg per week, gradually
-        weeks = round(abs(target_w - w) / per_week)
-        lines.append(f"Target {target_w} kg: about {weeks} weeks at a safe pace of ~{per_week} kg/week")
-        if target_w < low:
-            lines.append(f"WARNING: target {target_w} kg is below the healthy range ({low} kg). Advise a safer target.")
+        plan.update(weeks=round(abs(target_w - w) / per_week), per_week=per_week, target_weight=target_w,
+                    target_too_low=target_w < plan["healthy_min"])
+    return plan
+
+
+def build_plan(p: dict) -> str:
+    """The plan as text, for the AI."""
+    x = compute_plan(p)
+    pct = lambda grams, kcal: round(grams * kcal * 100 / x["target"])
+    lines = [
+        f"BMI: {x['bmi']} ({x['bmi_category']}). Healthy weight for this height: {x['healthy_min']}-{x['healthy_max']} kg",
+        f"BMR: {x['bmr']} kcal/day (Mifflin-St Jeor)",
+        f"Maintenance (TDEE, activity '{x['activity']}'): {x['tdee']} kcal/day",
+        f"Daily target for goal '{x['goal']}': {x['target']} kcal/day"
+        + (" (raised to the safe minimum)" if x["raised_to_minimum"] else ""),
+        f"Macros per day: protein {x['protein']} g ({pct(x['protein'], 4)}%), carbs {x['carbs']} g "
+        f"({pct(x['carbs'], 4)}%), fat {x['fat']} g ({pct(x['fat'], 9)}%)",
+        "Per meal: " + ", ".join(f"{m} {k} kcal" for m, k in x["meals"].items()),
+        f"Fiber: about {x['fiber']} g/day (MOH). Water: at least {x['water']} L/day, more with exercise and heat (MOH: at least 2 L)",
+        f"Limits (WHO): free sugars under {x['sugar_max']} g/day (ideally under {x['sugar_ideal']} g), "
+        f"saturated fat under {x['sat_fat_max']} g/day, salt under 5 g/day (1 teaspoon)",
+    ]
+    if x["weeks"]:
+        lines.append(f"Target {x['target_weight']} kg: about {x['weeks']} weeks at a safe pace of ~{x['per_week']} kg/week")
+        if x["target_too_low"]:
+            lines.append(f"WARNING: target {x['target_weight']} kg is below the healthy range ({x['healthy_min']} kg). Advise a safer target.")
     lines.append("Note: general estimates for healthy adults, not medical advice.")
     return "\n".join(lines)
+
+
+def plan_blocker(p: dict) -> str | None:
+    """Why no plan can be given (guardrails), or None."""
+    if p.get("condition", "none") != "none":
+        return ("MEDICAL_CONDITION: the user has a health condition or is pregnant/breastfeeding. Do not give calorie "
+                "or macro targets; give only general healthy-eating information and refer them to a doctor or licensed dietitian.")
+    if p["age"] < 18:
+        return "UNDER_18: do not give calorie or macro targets. Suggest talking to a parent and a doctor."
+    if not (30 <= p["weight_kg"] <= 300 and 120 <= p["height_cm"] <= 230):
+        return "INVALID_INPUT: weight or height looks wrong. Ask the user to check it."
+    return None
 
 
 @tool
@@ -177,11 +205,7 @@ def nutrition_plan(
     missing = [f for f in ("age", "sex", "weight_kg", "height_cm", "goal") if f not in p]
     if missing:
         return f"MISSING: ask the user for {missing} (ask once, in one short question)."
-    if p["age"] < 18:
-        return "UNDER_18: do not give calorie or macro targets. Suggest talking to a parent and a doctor."
-    if not (30 <= p["weight_kg"] <= 300 and 120 <= p["height_cm"] <= 230):
-        return "INVALID_INPUT: weight or height looks wrong. Ask the user to check it."
-    return build_plan(p)
+    return plan_blocker(p) or build_plan(p)
 
 
 # ---------- Lab 15 + 16: our n8n food nutrition workflow as a tool ----------
@@ -201,6 +225,19 @@ def check_food(food: str) -> str:
         return reply.text
     except Exception:
         return "TOOL_FAILED: the food workflow did not answer."
+
+
+def parse_food(text: str) -> dict | None:
+    """Read the numbers out of the n8n reply, e.g. 'Apples, raw (per 100 g): energy 52 kcal, protein 0.26 g ...'."""
+    import re
+    if "(per 100 g)" not in text:
+        return None
+    def num(label):
+        m = re.search(rf"{label} ([\d.]+)", text)
+        return float(m.group(1)) if m else 0.0
+    return {"name": text.split(" (per 100 g)")[0], "kcal": num("energy"), "protein": num("protein"),
+            "fat": num("fat"), "carbs": num("carbs"), "sugars": num("sugars"), "fiber": num("fiber"),
+            "sodium_mg": num("sodium")}
 
 
 # ---------- Lab 13: Tavily web search ----------

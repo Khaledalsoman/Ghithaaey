@@ -11,15 +11,17 @@ Terminal chat (like Lab 6 + Lab 14):  python assistant.py   (reset = new chat, q
 import uuid
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import before_model
+from langchain.agents.middleware import ModelRequest, before_model, dynamic_prompt
 from langchain_core.messages import RemoveMessage
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.config import get_config
 from langgraph.errors import GraphRecursionError
 from langgraph.graph.message import REMOVE_ALL_MESSAGES
 
 from rag import build_knowledge_tool
 from settings import CONFIG, get_secret
-from tools import build_web_search, calculator, check_food, nutrition_plan, save_profile
+from tools import (FOOD_LOGS, PROFILES, build_web_search, calculator, check_food, nutrition_plan,
+                   save_profile)
 
 
 def build_llm():
@@ -61,12 +63,35 @@ def keep_last_turns(state, runtime):
     return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *messages[start:]]}
 
 
+@dynamic_prompt
+def with_user_context(request: ModelRequest) -> str:
+    """The user fills a profile form in the app, so the agent knows them without asking again.
+    The profile and today's food log are added to the system prompt as data."""
+    prompt = CONFIG["system_prompt"]
+    try:
+        thread = get_config()["configurable"]["thread_id"]
+    except Exception:
+        return prompt
+    profile, log = PROFILES.get(thread), FOOD_LOGS.get(thread)
+    if profile:
+        prompt += (f"\n\nUSER PROFILE (saved in this chat, use it and do not ask again): {profile}."
+                   " nutrition_plan reads it automatically, so call it with no arguments.")
+        if profile.get("condition", "none") != "none":
+            prompt += (f" The user has a health condition ({profile['condition']}): never give calorie or macro"
+                       " targets; give general information only and refer them to a doctor or licensed dietitian.")
+    if log:
+        totals = {k: round(sum(item[k] for item in log)) for k in ("kcal", "protein", "carbs", "fat")}
+        foods = ", ".join(f"{item['name']} {item['grams']} g" for item in log)
+        prompt += f"\n\nFOOD EATEN TODAY (logged in the app): {foods}. Totals: {totals}."
+    return prompt
+
+
 def build_agent():
     return create_agent(
         model=build_llm(),
         tools=build_tools(),
         system_prompt=CONFIG["system_prompt"],
-        middleware=[keep_last_turns],
+        middleware=[keep_last_turns, with_user_context],
         checkpointer=InMemorySaver(),
     )
 
