@@ -80,7 +80,7 @@ TOOL_LABELS = {
     "search_knowledge_base": "📚 قاعدة المعرفة",
     "calculator": "🧮 الآلة الحاسبة",
     "calculate_calories": "🔥 حساب السعرات",
-    "check_weather": "🌤️ الطقس (n8n)",
+    "check_food": "🍎 القيم الغذائية (n8n)",
     "tavily_search": "🌐 بحث الويب",
 }
 

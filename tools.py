@@ -77,21 +77,23 @@ def calculate_calories(
             f"Daily target for goal '{goal}': {target} kcal/day\nMethod: Mifflin-St Jeor equation.")
 
 
-# ---------- Lab 15 + 16: our n8n weather workflow as a tool ----------
+# ---------- Lab 15 + 16: our n8n food nutrition workflow as a tool ----------
 @tool
-def check_weather(city: str) -> str:
-    """Get the current weather for a city. Use it for weather questions,
-    and when the user asks how much water to drink or what to eat in a city,
-    so the advice fits the heat."""
+def check_food(food: str) -> str:
+    """Get calories, protein, fat, carbs, sugars, fiber and sodium per 100 g for a food
+    (official USDA FoodData Central data, through our n8n workflow).
+    Use it when the user asks about the calories or nutrients of a specific food.
+    Give the food name in simple English as USDA names it, and say if it is raw or cooked,
+    e.g. "apples raw", "rice white cooked", "dates medjool", "chicken breast cooked"."""
     url = get_secret("N8N_URL")
     if not url:
-        return "TOOL_UNAVAILABLE: the n8n weather workflow is not connected."
+        return "TOOL_UNAVAILABLE: the n8n food workflow is not connected."
     try:
-        reply = requests.get(url, params={"city": city}, timeout=20)
+        reply = requests.get(url, params={"food": food}, timeout=30)
         reply.raise_for_status()
         return reply.text
     except Exception:
-        return "TOOL_FAILED: the weather workflow did not answer."
+        return "TOOL_FAILED: the food workflow did not answer."
 
 
 # ---------- Lab 13: Tavily web search ----------

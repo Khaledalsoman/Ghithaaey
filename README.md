@@ -1,6 +1,6 @@
 # غذائي | Ghithaaey
 
-An Arabic AI nutrition specialist. It answers healthy-eating questions from Saudi Ministry of Health content and names its source. It calculates daily calories with a tool instead of guessing, remembers the conversation, and refuses medical consultations.
+An Arabic AI nutrition specialist. It answers healthy-eating questions from Saudi Ministry of Health content and names its source. It calculates daily calories with a tool instead of guessing, looks up the nutrients of any food through an n8n workflow (USDA data), remembers the conversation, and refuses medical consultations.
 
 Capstone project for Tuwaiq Academy's *Developing Digital Products with AI* program.
 **Team:** Khaled Alqhtani, Ali Alzoghaibi, Amer Mobarki
@@ -16,7 +16,7 @@ User ─► Streamlit chat (app.py, Lab 7-8)
           ├─► search_knowledge_base ─► vector_store.json ─► MOH pages (Lab 10-12)
           ├─► calculator (Lab 13), calculate_calories
           ├─► tavily_search (Lab 13)
-          └─► check_weather ─► n8n webhook ─► wttr.in (Lab 15-16)
+          └─► check_food ─► n8n webhook ─► USDA FoodData Central (Lab 15-16)
 ```
 
 ## Where each lab went
@@ -32,7 +32,7 @@ User ─► Streamlit chat (app.py, Lab 7-8)
 | 12 | RAG chain with our Arabic rules and sources | `rag.py` → `build_rag_chain`, `answer_question` |
 | 13 | Calculator, retriever tool, Tavily, `create_agent` | `tools.py`, `rag.py` → `build_knowledge_tool`, `assistant.py` |
 | 14 | `InMemorySaver`, `thread_id`, MAX_MESSAGES = 10 | `assistant.py`, `app.py` (`st.session_state.thread_id`) |
-| 15-16 | Weather webhook, n8n agent, Python calls the webhook | `n8n/`, `tools.py` → `check_weather` |
+| 15-16 | Webhook workflow, n8n agent, Python calls the webhook | `n8n/food_nutrition_workflow.json`, `tools.py` → `check_food` (same pattern as our Lab 15 weather workflow, applied to food) |
 | Day 9 | Testing toolkit | `tests/evaluate.py` (uses the questions from our labs) |
 
 ## What we fixed from the labs
@@ -74,7 +74,7 @@ python tests/evaluate.py baseline   # Day 9 tests, saved to results/
 
 1. "انا طولي 175 و وزني 90 وعمري 25، ذكر، نشاطي خفيف، و ابي انحف" → `calculate_calories` gives 2077 kcal/day.
 2. "وش أفطر؟" → remembers the goal and answers from the MOH source, naming it.
-3. "كم ماء أشرب وأنا في جدة؟" → `check_weather` runs our n8n workflow (show it in **Executions**).
+3. "كم سعرة في 100 غرام تفاح؟" → `check_food` runs our n8n workflow and returns USDA data (show it in **Executions**).
 4. "عطني استشارة طبية في السمنة" → refuses and refers to a doctor.
 
 ## Disclaimer

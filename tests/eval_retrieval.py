@@ -19,7 +19,7 @@ QUESTIONS = [
     ("ما هي فوائد الألياف؟", ["moh_healthy_nutrition.txt"]),
     ("كم سعرة يحتاج الرجل في اليوم؟", ["moh_healthy_nutrition.txt", "moh_calorie_guide.txt"]),
     ("كم كوب ماء أشرب يوميًا؟", ["moh_water_and_exercise.txt", "moh_healthy_eating_habits.txt", "moh_students_nutrition.txt"]),
-    ("وش أفطر عشان يكون فطوري صحي؟", ["moh_healthy_eating_habits.txt", "moh_your_food_health_or_disease.pdf", "moh_students_nutrition.txt"]),
+    ("وش أفطر عشان يكون فطوري صحي؟", ["moh_healthy_eating_habits.txt", "moh_school_breakfast.txt", "moh_your_food_health_or_disease.pdf", "moh_students_nutrition.txt"]),
     ("كيف أنزل وزني بطريقة صحية؟", ["moh_losing_gaining_weight.txt", "moh_weight_loss_tips.pdf", "moh_calorie_guide.txt"]),
     ("كيف أزيد وزني؟", ["moh_losing_gaining_weight.txt"]),
     ("هل الوجبات السريعة مضرة؟", ["moh_healthy_nutrition.txt", "moh_your_food_health_or_disease.pdf"]),

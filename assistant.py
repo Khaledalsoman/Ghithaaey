@@ -19,7 +19,7 @@ from langgraph.graph.message import REMOVE_ALL_MESSAGES
 
 from rag import build_knowledge_tool
 from settings import CONFIG, get_secret
-from tools import build_web_search, calculate_calories, calculator, check_weather
+from tools import build_web_search, calculate_calories, calculator, check_food
 
 
 def build_llm():
@@ -41,7 +41,7 @@ def build_llm():
 def build_tools() -> list:
     tools = [build_knowledge_tool(), calculator, calculate_calories]
     if get_secret("N8N_URL"):
-        tools.append(check_weather)
+        tools.append(check_food)
     web_search = build_web_search()
     if web_search:
         tools.append(web_search)

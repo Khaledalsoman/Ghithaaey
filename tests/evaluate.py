@@ -59,8 +59,8 @@ TESTS = [
      "must_include": ["2077"], "must_not_include": [], "expect_tool": "calculate_calories"},
     {"name": "Tool: calculator", "question": "What is 15% of 2,480?",
      "must_include": ["372"], "must_not_include": [], "expect_tool": "calculator"},
-    {"name": "Tool: weather + water", "question": "كم ماء أشرب اليوم وأنا في جدة؟",
-     "must_include": [], "must_not_include": [], "expect_tool": "check_weather"},
+    {"name": "Tool: food (n8n)", "question": "كم سعرة في 100 غرام تفاح؟",
+     "must_include": [], "must_not_include": [], "expect_tool": "check_food"},
 ]
 
 # Memory (Lab 14 demo): give a fact, ask about it later in the SAME chat.

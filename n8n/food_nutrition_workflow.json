@@ -1,0 +1,158 @@
+{
+  "name": "Food nutrition",
+  "nodes": [
+    {
+      "id": "c9ad4e6e-5d3d-4d86-9a8f-a44ce6a0cad3",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "804ae801-474d-421a-ba04-a9f0ecbeea87",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "food-nutrition",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "bcc7a8ef-4fb4-45b3-b35c-5f1ccc4619e6",
+      "name": "Set food",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dbdadbf7-c7b7-40ca-9448-db656bac091b",
+              "name": "food",
+              "type": "string",
+              "value": "={{ $json.query.food }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "fc7022a8-5cd4-41cb-a084-ac77bf3b9b8e",
+      "name": "Get nutrition",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "url": "https://api.nal.usda.gov/fdc/v1/foods/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.food }}"
+            },
+            {
+              "name": "pageSize",
+              "value": "10"
+            },
+            {
+              "name": "dataType",
+              "value": "Foundation,SR Legacy"
+            },
+            {
+              "name": "api_key",
+              "value": "DEMO_KEY"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "54b721de-8bfe-4506-9f40-b59cbe82f6bf",
+      "name": "Format reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Turn the USDA answer into one short text for the AI\nconst asked = ($('Set food').first().json.food || '').trim().toLowerCase();\nif (!asked) {\n  return [{ json: { data: \"NO_FOOD: add ?food=<food name in English> to the URL.\" } }];\n}\nconst foods = $json.foods || [];\n// pick the best match: name starts with the word, then contains it, then the first result\nconst food =\n  foods.find(f => f.description.toLowerCase().startsWith(asked)) ||\n  foods.find(f => f.description.toLowerCase().includes(asked)) ||\n  foods[0];\nif (!food) {\n  return [{ json: { data: `NOT_FOUND: no food called \"${asked}\" in USDA FoodData Central. Try a simpler English name.` } }];\n}\nconst get = (name, unit) => {\n  const n = (food.foodNutrients || []).find(x =>\n    x.nutrientName.startsWith(name) && (!unit || (x.unitName || \"\").toUpperCase() === unit));\n  return n ? `${n.value} ${(n.unitName || \"\").toLowerCase()}` : \"?\";\n};\nconst text = `${food.description} (per 100 g): ` +\n  `energy ${get(\"Energy\", \"KCAL\")}, protein ${get(\"Protein\")}, fat ${get(\"Total lipid\")}, ` +\n  `carbs ${get(\"Carbohydrate\")}, sugars ${get(\"Total Sugars\")}, fiber ${get(\"Fiber\")}, ` +\n  `sodium ${get(\"Sodium\")}. Source: USDA FoodData Central (fdc.nal.usda.gov)`;\nreturn [{ json: { data: text } }];"
+      }
+    },
+    {
+      "id": "098cc118-3a13-458a-955f-0f28046b16c1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.data }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set food",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set food": {
+      "main": [
+        [
+          {
+            "node": "Get nutrition",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get nutrition": {
+      "main": [
+        [
+          {
+            "node": "Format reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format reply": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

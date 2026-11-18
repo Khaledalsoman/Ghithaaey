@@ -159,13 +159,17 @@
     "url": "https://www.moh.gov.sa/Documents/الدليل الغذائي السعودي - عربي.pdf",
     "publisher": "وزارة الصحة (2012)",
     "topic": "النخلة الغذائية الصحية: الدليل الغذائي السعودي، الحصص اليومية من المجموعات الغذائية",
-    "fix": "arabic_glyphs"
+    "fix": "arabic_glyphs",
+    "skip": true,
+    "reason": "Download fails (MOH blocks it and Tavily cannot read it). Add by hand later if needed."
   },
   {
     "file": "moh_food_guide_practitioners.pdf",
     "url": "https://www.moh.gov.sa/en/Ministry/About/Health Policies/Healthy-Food-Guidelines-for-Health-Practitioners-compressed.pdf",
     "publisher": "وزارة الصحة (1441هـ)",
-    "topic": "دليل الغذاء الصحي للممارس الصحي (من خطة Lab 9)"
+    "topic": "دليل الغذاء الصحي للممارس الصحي (من خطة Lab 9)",
+    "skip": true,
+    "reason": "Download fails (MOH blocks it and Tavily cannot read it). Add by hand later if needed."
   },
   {
     "file": "moh_overweight_obesity.txt",
@@ -219,6 +223,8 @@
     "file": "pha_ramadan_guide.pdf",
     "url": "https://www.pha.gov.sa/ar-sa/EvidenceAndProcedures/Documents/دليلك الصحي في رمضان.pdf",
     "publisher": "هيئة الصحة العامة (وقاية)",
-    "topic": "دليلك الصحي في رمضان"
+    "topic": "دليلك الصحي في رمضان",
+    "skip": true,
+    "reason": "Lab 9 check 'clear and complete' failed: the PDF font comes out as unreadable letters"
   }
 ]

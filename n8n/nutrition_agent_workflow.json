@@ -26,7 +26,7 @@
       ],
       "parameters": {
         "options": {
-          "systemMessage": "أنت مساعد تغذية ودود ومحفز اسمه غذائي. أجب باللغة العربية وباختصار. التزم بمواضيع الغذاء والتغذية فقط. استخدم calculator للحسابات و check_weather للطقس أو لنصائح شرب الماء حسب حرارة المدينة. إذا فشلت أداة فقل ذلك. لا تقدم استشارات طبية أو تشخيصًا، وانصح بمراجعة الطبيب."
+          "systemMessage": "أنت مساعد تغذية ودود ومحفز اسمه غذائي. أجب باللغة العربية وباختصار. التزم بمواضيع الغذاء والتغذية فقط. استخدم calculator للحسابات، و check_food لمعرفة السعرات والعناصر الغذائية لكل 100 غرام من أي طعام (اكتب اسم الطعام بالإنجليزية، مثل apple أو rice). إذا فشلت أداة فقل ذلك. لا تقدم استشارات طبية أو تشخيصًا، وانصح بمراجعة الطبيب."
         }
       }
     },
@@ -74,7 +74,7 @@
     },
     {
       "id": "6fecd590-f1c1-42d5-9b9b-bbb1001aecce",
-      "name": "check_weather",
+      "name": "check_food",
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
@@ -82,14 +82,14 @@
         240
       ],
       "parameters": {
-        "toolDescription": "Get the current weather for a city. Use it for weather questions.",
-        "url": "PASTE-YOUR-CITY-WEATHER-PRODUCTION-URL",
+        "toolDescription": "Get calories, protein, fat, carbs, sugars, fiber and sodium per 100 g for a food. Use it when the user asks about the calories or nutrients of a specific food. Give the food name in simple English, e.g. apple, white rice, dates.",
+        "url": "PASTE-YOUR-FOOD-NUTRITION-PRODUCTION-URL",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
             {
-              "name": "city",
-              "value": "={{ $fromAI('city', 'the city name', 'string') }}"
+              "name": "food",
+              "value": "={{ $fromAI('food', 'the food name in simple English', 'string') }}"
             }
           ]
         },
@@ -142,7 +142,7 @@
         ]
       ]
     },
-    "check_weather": {
+    "check_food": {
       "ai_tool": [
         [
           {
