@@ -42,7 +42,8 @@ User ─► Streamlit chat (app.py, Lab 7-8)
 | Lab 13 loaded `all-MiniLM-L6-v2` while Lab 11 built the store with the multilingual model, so the search returned unrelated chunks | One `embedding_model` setting in `config.json`, used when building and loading |
 | Lab 13: the agent answered nutrition questions without calling any tool | The prompt now tells it to call `search_knowledge_base` first and answer only from it |
 | Every chunk's source was `knowledge_base.json`, not the real page | Chunks keep the real file name, e.g. `moh_healthy_nutrition.txt` |
-| Lab 12: "how much water per day?" → not sure, because water wasn't in our data | Added the MOH pages for water, breakfast, weight loss and fast food from our Lab 9 plan |
+| Lab 12: "how much water per day?" → not sure, because water wasn't in our data | Knowledge base grew from 1 page to 25 official sources (MOH, SFDA, WHO). See `knowledge/README.md` |
+| Chunks of 200 characters were too small for many sources | `max_chars` 400 and `k` 4, following the Day 5 slide (300-500 characters) |
 | Lab 5: the same question gave 1500-1600 kcal, then 1800-1900 kcal | `calculate_calories` tool gives one exact answer (Mifflin-St Jeor) |
 | Lab 6 / Lab 8: no memory (our own "one improvement") | Lab 14 memory added to the app |
 
@@ -60,7 +61,8 @@ cp .streamlit/secrets.toml.example .streamlit/secrets.toml # for the app
 ## Run
 
 ```bash
-python build_knowledge_base.py      # Lab 10-11: clean, chunk, embed -> vector_store.json
+python build_knowledge_base.py      # Lab 10-11: download 25 official sources, clean, chunk, embed
+python tests/eval_retrieval.py      # RAG check: does search find the right source? (no key needed)
 pytest                              # test each tool alone
 python rag.py "ما هي فوائد التغذية الصحية"   # Lab 12 chain, shows the context and sources
 python assistant.py                 # terminal chat (reset / quit)

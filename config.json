@@ -14,9 +14,10 @@
   "model": "gemini-3.5-flash-lite",
   "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
   "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-  "k": 3,
-  "max_chars": 200,
+  "k": 4,
+  "max_chars": 400,
   "min_chunk_chars": 50,
   "max_messages": 10,
-  "step_limit": 6
+  "step_limit": 6,
+  "add_titles": true
 }

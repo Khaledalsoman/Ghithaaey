@@ -1,17 +1,224 @@
 [
   {
     "file": "moh_healthy_nutrition.txt",
-    "url": "https://www.moh.gov.sa/healthawareness/educationalcontent/food-and-nutrition/pages/001.aspx",
-    "note": "Lab 10 source: MOH, Healthy Nutrition (Arabic). Topics: calories, fruit and vegetables, fibre, grains, fats, red meat, supplements, recommendations."
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/001.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "التغذية الصحية: السعرات، الألياف، الدهون، الحبوب، المكملات"
+  },
+  {
+    "file": "moh_vegetarian_diet.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/002.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "النظام الغذائي النباتي"
+  },
+  {
+    "file": "moh_hypertension_diet.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/003.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "الغذاء الصحي لمرضى ضغط الدم (الملح)"
+  },
+  {
+    "file": "moh_keto_diet.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/004.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "حمية الكيتو"
+  },
+  {
+    "file": "moh_fish.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/005.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "الأسماك"
+  },
+  {
+    "file": "moh_students_nutrition.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/006.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "تغذية الطلاب، الغذاء المتوازن، الماء"
+  },
+  {
+    "file": "moh_athletes_nutrition.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/007.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "تغذية الرياضيين: أفضل أكل قبل وبعد التمرين"
+  },
+  {
+    "file": "moh_sugary_drinks.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/008.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "المشروبات المحلاة بالسكر"
+  },
+  {
+    "file": "moh_protein_supplements.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/Proteins.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "مكملات البروتين والمنشطات"
+  },
+  {
+    "file": "moh_poor_nutrition.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/Poor_Nutrition.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "سوء التغذية",
+    "skip": true,
+    "reason": "Lab 9 check 'relevant' failed: the page text is about cooperatives, not nutrition"
+  },
+  {
+    "file": "moh_food_care_guidelines.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/Guidelines.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "العناية بالغذاء: حفظ الطعام وتخزينه بطريقة سليمة"
+  },
+  {
+    "file": "moh_milk.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/milk.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "القيمة الغذائية للحليب"
+  },
+  {
+    "file": "moh_calorie_guide.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Food-and-Nutrition/Pages/Food-Calorie-Calculator.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "السعرات الحرارية لإنقاص الوزن"
   },
   {
     "file": "moh_healthy_eating_habits.txt",
-    "url": "https://www.moh.gov.sa/en/awarenessplateform/HealthyLifestyle/Pages/HealthyEatingHabits.aspx",
-    "note": "Lab 9 plan: water_intake + healthy_breakfast. MOH healthy eating tips (English page)."
+    "url": "https://www.moh.gov.sa/awarenessplateform/HealthyLifestyle/Pages/HealthyEatingHabits.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "العادات الغذائية الصحية: وجبة الفطور الصباحية، الماء، تنويع الطعام"
   },
   {
-    "file": "moh_healthy_food_choices.txt",
-    "url": "https://www.moh.gov.sa/en/HealthAwareness/Campaigns/badana/Pages/002.aspx",
-    "note": "Lab 9 plan: weight_loss + fast_food. MOH obesity campaign, healthy food choices guide (English page)."
+    "file": "moh_losing_gaining_weight.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/HealthyLifestyle/Pages/LosingAndGainingWeight.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "إنقاص الوزن وزيادته"
+  },
+  {
+    "file": "moh_water_and_exercise.txt",
+    "url": "https://www.moh.gov.sa/HealthAwareness/EducationalContent/Miscellaneous/Pages/015.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "شرب الماء: كم كوب ماء يحتاج الجسم يوميًا، الماء والرياضة"
+  },
+  {
+    "file": "moh_ramadan_suhoor.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/SeasonalAndFestivalHealth/Educational-Content/Pages/suhoor.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "رمضان: وجبة السحور، وش آكل في السحور"
+  },
+  {
+    "file": "moh_ramadan_iftar.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/SeasonalAndFestivalHealth/Educational-Content/Pages/Healthy-Food-Iftar.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "رمضان: وجبة الإفطار بعد الصيام"
+  },
+  {
+    "file": "moh_ramadan_healthy_lifestyle.pdf",
+    "url": "https://www.moh.gov.sa/awarenessplateform/HealthyLifestyle/Documents/Healthy-lifestyle-in-Ramadan.pdf",
+    "publisher": "وزارة الصحة",
+    "topic": "نمط الحياة الصحي في رمضان",
+    "skip": true,
+    "reason": "Lab 9 check 'clear and complete' failed: the PDF text comes out with reversed letters"
+  },
+  {
+    "file": "moh_fasting_nutrition.pdf",
+    "url": "https://www.moh.gov.sa/Ministry/MediaCenter/Ads/Documents/Fasting.pdf",
+    "publisher": "وزارة الصحة",
+    "topic": "التغذية والصيام",
+    "fix": "reverse_words"
+  },
+  {
+    "file": "moh_your_food_health_or_disease.pdf",
+    "url": "https://www.moh.gov.sa/Gulf/HealthGuidelines/MinistryPrints/Documents/غذاؤك إما صحة وإما مرض.pdf",
+    "publisher": "وزارة الصحة",
+    "topic": "العادات الغذائية، الفطور، طرق الطهي الصحية"
+  },
+  {
+    "file": "moh_weight_loss_tips.pdf",
+    "url": "https://www.moh.gov.sa/awarenessplateform/ChronicDisease/Documents/012.pdf",
+    "publisher": "وزارة الصحة",
+    "topic": "إنقاص الوزن التدريجي"
+  },
+  {
+    "file": "moh_healthy_food_palm.pdf",
+    "url": "https://www.moh.gov.sa/en/Ministry/MediaCenter/Publications/Documents/final english  الكتاب العلمي إنجليزي.pdf",
+    "publisher": "وزارة الصحة (2012)",
+    "topic": "النخلة الغذائية الصحية: الدليل الغذائي للسعوديين (Healthy Food Palm)"
+  },
+  {
+    "file": "who_healthy_diet_ar.txt",
+    "url": "https://www.who.int/ar/news-room/fact-sheets/detail/healthy-diet",
+    "publisher": "منظمة الصحة العالمية",
+    "topic": "النظام الغذائي الصحي: الملح، السكر، الدهون، الفواكه والخضراوات"
+  },
+  {
+    "file": "sfda_nutrition_label_guide.pdf",
+    "url": "https://www.sfda.gov.sa/sites/default/files/2022-08/Ta-01.pdf",
+    "publisher": "هيئة الغذاء والدواء",
+    "topic": "دليل البطاقة التغذوية: قراءة الملصق"
+  },
+  {
+    "file": "moh_healthy_food_palm_ar.pdf",
+    "url": "https://www.moh.gov.sa/Documents/الدليل الغذائي السعودي - عربي.pdf",
+    "publisher": "وزارة الصحة (2012)",
+    "topic": "النخلة الغذائية الصحية: الدليل الغذائي السعودي، الحصص اليومية من المجموعات الغذائية",
+    "fix": "arabic_glyphs"
+  },
+  {
+    "file": "moh_food_guide_practitioners.pdf",
+    "url": "https://www.moh.gov.sa/en/Ministry/About/Health Policies/Healthy-Food-Guidelines-for-Health-Practitioners-compressed.pdf",
+    "publisher": "وزارة الصحة (1441هـ)",
+    "topic": "دليل الغذاء الصحي للممارس الصحي (من خطة Lab 9)"
+  },
+  {
+    "file": "moh_overweight_obesity.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/ChronicDisease/Pages/Overweight-and-Obesity.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "زيادة الوزن والسمنة: التحكم بالوزن والسعرات"
+  },
+  {
+    "file": "moh_ramadan_healthy_food.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/SeasonalAndFestivalHealth/Educational-Content/Pages/Healthy-food.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "رمضان: الغذاء الصحي في رمضان"
+  },
+  {
+    "file": "moh_school_breakfast.txt",
+    "url": "https://www.moh.gov.sa/awarenessplateform/ChildsHealth/Pages/SchoolHealth.aspx",
+    "publisher": "وزارة الصحة",
+    "topic": "وجبة الفطور الصباحية وأهميتها"
+  },
+  {
+    "file": "who_obesity_ar.txt",
+    "url": "https://www.who.int/ar/news-room/fact-sheets/detail/obesity-and-overweight",
+    "publisher": "منظمة الصحة العالمية",
+    "topic": "السمنة وزيادة الوزن: التعريف، مؤشر كتلة الجسم، الوقاية"
+  },
+  {
+    "file": "who_salt_reduction_ar.txt",
+    "url": "https://www.who.int/ar/news-room/fact-sheets/detail/salt-reduction",
+    "publisher": "منظمة الصحة العالمية",
+    "topic": "الحد من الملح والصوديوم"
+  },
+  {
+    "file": "fao_healthy_eating_ar.txt",
+    "url": "https://www.fao.org/newsroom/story/How-much-do-you-know-about-healthy-eating-/ar",
+    "publisher": "منظمة الأغذية والزراعة (فاو)",
+    "topic": "الأكل الصحي: نصائح عامة"
+  },
+  {
+    "file": "sfda_caffeine_ar.txt",
+    "url": "https://www.sfda.gov.sa/en/node/18711",
+    "publisher": "هيئة الغذاء والدواء",
+    "topic": "الكافيين: القهوة ومشروبات الطاقة وحدود الاستهلاك"
+  },
+  {
+    "file": "sfda_caffeine_sugar_fat_guide.pdf",
+    "url": "https://www.sfda.gov.sa/sites/default/files/2022-01/SFDAProductsContainingCaffeine.pdf",
+    "publisher": "هيئة الغذاء والدواء (اللجنة الوطنية للتغذية)",
+    "topic": "الحدود القصوى للكافيين والسكر والدهون، بدائل صحية"
+  },
+  {
+    "file": "pha_ramadan_guide.pdf",
+    "url": "https://www.pha.gov.sa/ar-sa/EvidenceAndProcedures/Documents/دليلك الصحي في رمضان.pdf",
+    "publisher": "هيئة الصحة العامة (وقاية)",
+    "topic": "دليلك الصحي في رمضان"
   }
 ]
