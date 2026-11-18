@@ -1,0 +1,21 @@
+# Secrets (Day 3: never upload keys to GitHub)
+.env
+.streamlit/secrets.toml
+
+# Generated
+knowledge_base.json
+vector_store.json
+results/*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/

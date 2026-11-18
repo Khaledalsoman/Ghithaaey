@@ -1,0 +1,20 @@
+# Lab 5-8: model + chat screen
+langchain>=1.0
+langchain-google-genai
+langchain-openai
+langchain-ollama
+streamlit
+python-dotenv
+# Lab 10-12: knowledge base + RAG
+langchain-community
+langchain-huggingface
+sentence-transformers
+beautifulsoup4
+requests
+pypdf
+# Lab 13-14: tools + memory
+langchain-tavily
+langgraph
+# Day 9: testing
+pandas
+pytest

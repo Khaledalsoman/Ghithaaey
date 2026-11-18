@@ -1,0 +1,17 @@
+[
+  {
+    "file": "moh_healthy_nutrition.txt",
+    "url": "https://www.moh.gov.sa/healthawareness/educationalcontent/food-and-nutrition/pages/001.aspx",
+    "note": "Lab 10 source: MOH, Healthy Nutrition (Arabic). Topics: calories, fruit and vegetables, fibre, grains, fats, red meat, supplements, recommendations."
+  },
+  {
+    "file": "moh_healthy_eating_habits.txt",
+    "url": "https://www.moh.gov.sa/en/awarenessplateform/HealthyLifestyle/Pages/HealthyEatingHabits.aspx",
+    "note": "Lab 9 plan: water_intake + healthy_breakfast. MOH healthy eating tips (English page)."
+  },
+  {
+    "file": "moh_healthy_food_choices.txt",
+    "url": "https://www.moh.gov.sa/en/HealthAwareness/Campaigns/badana/Pages/002.aspx",
+    "note": "Lab 9 plan: weight_loss + fast_food. MOH obesity campaign, healthy food choices guide (English page)."
+  }
+]
