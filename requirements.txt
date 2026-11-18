@@ -3,7 +3,7 @@ langchain>=1.0
 langchain-google-genai
 langchain-openai
 langchain-ollama
-streamlit
+streamlit>=1.50   # pills, icons and width="stretch" used by the new UI
 python-dotenv
 # Lab 10-12: knowledge base + RAG
 langchain-community
