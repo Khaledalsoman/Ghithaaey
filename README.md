@@ -93,3 +93,23 @@ General nutrition information only, not medical advice.
 | 5. Check the sources | 📚 المصادر | Trust |
 
 Guardrails in the UI: health condition / pregnancy or under 18 → no calorie targets, refer to a doctor. "New chat" deletes the profile and log (privacy).
+
+## Day 9: test and improve (results)
+
+16 tests (`tests/evaluate.py`): normal, vague, out of scope, not in the data, trick, risky (medical, under 18), dialect, English, rude, tools, memory. Checked automatically and scored by an AI judge (0-2 each).
+
+| Run | Auto checks | AI judge |
+|---|---|---|
+| baseline | 13 / 16 | 27 / 32 |
+| change1 | 16 / 16 | 29 / 32 |
+
+| Problem found in baseline | What we changed (change1) | Result |
+|---|---|---|
+| Memory: the user did not say their activity, the model guessed "moderate" → 2,400 kcal instead of 2,077 | System prompt: «لا تخمّن مستوى النشاط… قل له إنك افترضت نشاطًا خفيفًا» | 2,077 kcal, and it tells the user what it assumed (judge 1 → 2) |
+| Rude message: Gemini blocked it and the answer was **empty** | `ask()`: an empty model reply becomes a calm, friendly answer | judge 0 → 2 |
+| "Big Mac meal": USDA values are per 100 g, not the full meal | System prompt: say the values are per 100 g, not the whole meal | clearer answer |
+| Calories test failed although the answer said "2,077" | Test checker bug: it now ignores thousands commas and reads Arabic digits | (test fix, not an assistant fix) |
+
+Found in change1: "100 g apples" gave 25 kcal, because USDA's first result was "Rose-apples, raw". Fix (ready in `n8n/food_nutrition_workflow.json`, not re-tested yet): the Code node scores every result (first word, all words, simpler name) and picks "Apples, raw, with skin".
+
+Retrieval (`tests/eval_retrieval.py`): 14/20 → 18/20 (topic titles on chunks) → 20/22 (more official sources).

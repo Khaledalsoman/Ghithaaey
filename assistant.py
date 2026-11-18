@@ -125,7 +125,10 @@ def ask(agent, question: str, thread_id: str) -> tuple[str, list[dict]]:
     tool_log = [{"tool": call["name"], "args": call["args"]}
                 for m in messages[last_human:] if m.type == "ai"
                 for call in (m.tool_calls or [])]
-    return text_of(messages[-1].content), tool_log
+    answer = text_of(messages[-1].content).strip()
+    if not answer:  # the model returned nothing (e.g. Gemini safety block on an insulting message)
+        answer = "أنا هنا عشان أساعدك 🙂 اكتب سؤالك عن الأكل أو التغذية بهدوء وبجاوبك."
+    return answer, tool_log
 
 
 if __name__ == "__main__":
