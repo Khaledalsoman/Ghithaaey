@@ -57,3 +57,10 @@ def test_under_18_guardrail_lab10_question():
 def test_food_tool_without_n8n(monkeypatch):
     monkeypatch.delenv("N8N_URL", raising=False)
     assert check_food.invoke({"food": "apple"}).startswith(("TOOL_UNAVAILABLE", "TOOL_FAILED"))
+
+
+def test_health_condition_blocks_targets():
+    config = {"configurable": {"thread_id": "condition-test"}}
+    answer = nutrition_plan.invoke({"age": 25, "sex": "male", "weight_kg": 80, "height_cm": 175,
+                                    "goal": "lose", "condition": "diabetes"}, config)
+    assert answer.startswith("MEDICAL_CONDITION")

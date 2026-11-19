@@ -57,6 +57,7 @@ MEALS = {"breakfast / الفطور": 0.25, "lunch / الغداء": 0.35, "dinner
 Activity = Literal["sedentary", "light", "moderate", "active", "very_active"]
 Goal = Literal["lose", "maintain", "gain"]
 Sex = Literal["male", "female"]
+Condition = Literal["none", "pregnancy", "diabetes", "hypertension", "kidney", "other"]
 
 
 def bmi(weight_kg: float, height_cm: float) -> float:
@@ -163,15 +164,19 @@ def save_profile(
     activity: Optional[Activity] = None,
     goal: Optional[Goal] = None,
     target_weight_kg: Optional[float] = None,
+    condition: Optional[Condition] = None,
 ) -> str:
     """Remember the user's body data for this chat. Call it whenever the user tells you their age, sex,
     weight, height, activity level, goal or target weight (even one of them, even if they did not ask
     a question). Only pass the fields the user gave. Do not store names or other personal data.
     activity: sedentary (no exercise), light (1-3 days/week), moderate (3-5), active (6-7), very_active.
-    goal: lose, maintain or gain weight."""
+    goal: lose, maintain or gain weight.
+    condition: set it whenever the user mentions a health condition (diabetes, high blood pressure,
+    kidney disease, pregnancy or breastfeeding, any other illness)."""
     profile = PROFILES.setdefault(thread_of(config), {})
     given = {k: v for k, v in dict(age=age, sex=sex, weight_kg=weight_kg, height_cm=height_cm,
-                                   activity=activity, goal=goal, target_weight_kg=target_weight_kg).items()
+                                   activity=activity, goal=goal, target_weight_kg=target_weight_kg,
+                                   condition=condition).items()
              if v is not None}
     profile.update(given)
     missing = [f for f in PROFILE_FIELDS if f not in profile and f != "target_weight_kg"]
@@ -188,16 +193,19 @@ def nutrition_plan(
     activity: Optional[Activity] = None,
     goal: Optional[Goal] = None,
     target_weight_kg: Optional[float] = None,
+    condition: Optional[Condition] = None,
 ) -> str:
     """Full daily nutrition numbers for an adult (18+): BMI and healthy weight range, BMR, maintenance
     calories, target calories for the goal, macros (protein, carbs, fat in grams and %), calories per meal,
     fiber, water, sugar/saturated-fat/salt limits, and weeks to reach a target weight.
     Use it for any question about calories, macros, protein needs, losing or gaining weight.
     Any field left empty is taken from the saved profile of this chat, so do not ask again for data the
-    user already gave. If something is still missing, it says what to ask."""
+    user already gave. If something is still missing, it says what to ask.
+    If the user mentions a health condition (diabetes, pregnancy, ...), pass condition: no targets are given then."""
     profile = PROFILES.setdefault(thread_of(config), {})
     given = {k: v for k, v in dict(age=age, sex=sex, weight_kg=weight_kg, height_cm=height_cm,
-                                   activity=activity, goal=goal, target_weight_kg=target_weight_kg).items()
+                                   activity=activity, goal=goal, target_weight_kg=target_weight_kg,
+                                   condition=condition).items()
              if v is not None}
     profile.update(given)
     p = dict(profile)
